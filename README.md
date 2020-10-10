@@ -4,5 +4,7 @@
 不用向word那样反复调整了。
 
 使用cetx -texstudio编译。
+
 texstudio-编辑-设置编码-GB18030
+
 texstudio-选项-设置-编辑器-默认字体编码 UTF-8
