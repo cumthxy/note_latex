@@ -1,0 +1,178 @@
+\documentclass[10.5pt,a4paper]{article}%无目录类的短文，A4纸，正文字号12pt(小四)，14pt四号
+\usepackage{amsmath}%公式包
+\usepackage{graphicx}%图片包
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+\usepackage{makecell,rotating,multirow,diagbox}
+\usepackage{ctex}%中文包，默认字体宋体
+\usepackage{geometry}%页边距设置
+\geometry{left=0.5cm,right=0.5cm,top=1cm,bottom=1cm}%页边距设置
+\usepackage{setspace}%行间距设置
+\renewcommand{\baselinestretch}{1.245}%1.0倍行间距
+\usepackage{mathptmx}%英文字体times newman
+\usepackage{titlesec}
+\usepackage{enumitem}
+\titleformat{\section}{\bfseries}{\thesection.}{}{}
+\titleformat{\subsection}{\bfseries}{\thesubsection.}{}{}
+\titleformat{\subsubsection}{\bfseries}{\thesubsubsection.}{}{}
+\titlespacing*{\chapter} {0pt}{0pt}{0pt}
+\titlespacing*{\section} {0pt}{0pt}{0pt}
+\titlespacing*{\subsection} {0pt}{0pt}{0pt}
+\titlespacing*{\subsubsection}{0pt}{0pt}{0pt}
+\setlength{\abovecaptionskip}{0.2cm}   %调整图片标题与图距离
+\setlength{\belowcaptionskip}{0.2cm}   %调整图片标题与下文距离
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\setitemize[2]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=0pt}
+\setdescription{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\begin{document}
+	
+	
+	
+%	\begin{itemize}
+%		\item  抢购活动 抢购活动，削峰填谷，防止系统崩塌。 
+%		\item 延迟信息处理，比如 10 分钟之后给下单未付款的用户发送邮件提醒。
+%		\item 解耦系统，对于新增的功能可以单独写模块扩展，比如用户确认评价之后，新增了给用户返积分的功能，这个时候不用在业务代码里添加新增积分的功能，只需要把新增积分的接口订阅确认评价的消息队列即可，后面再添加任何功能只需要订阅对应的消息队列即可。
+%	\end{itemize}
+%\begin{figure}[htbp] 
+%	\centering 
+%	\includegraphics[width=0.55\textwidth]{Img//1.jpg}
+%	\caption{网络协议}
+%	\label{网络协议} 
+%\end{figure}
+\section{索引的优势和劣势}
+\subsection{优势}
+第一，通过创建唯一性索引，可以保证数据库表中每一行数据的唯一性。
+ 
+第二，可以大大加快数据的检索速度，这也是创建索引的最主要的原因。 
+
+第三，可以加速表和表之间的连接，特别是在实现数据的参考完整性方面特别有意义。 
+
+第四，在使用分组和排序 子句进行数据检索时，同样可以显著减少查询中分组和排序的时间。
+\subsection{劣势}
+第一，创建索引和维护索引要耗费时间，这种时间随着数据量的增加而增加。 
+
+第二，索引需要占物理空间，除了数据表占数据空间之外，每一个索引还要占一定的物理空间，如果要建立聚簇索引，那么需要的空间就会更大。 
+
+第三，当对表中的数据进行增加、删除和修改的时候，索引也要动态的维护，这样就降低了数据的维护速度。
+\section{索引分类}
+
+\subsection{单列索引}
+
+\begin{itemize}
+	\item  普通索引，MySQL中基本的索引类型，没有什么限制，允许在定义索引的列中插入重复值和空值，纯粹为了查询的速度更快 。 add index 
+	\item 唯一索引，索引列中的值必须是唯一的，但是允许为空值。 add unique index。
+	\item  主键索引，是一种特殊的唯一索引，不允许有空值。pk
+\end{itemize}
+
+\subsection{组合索引}
+
+\begin{itemize}
+	\item 在表中的多个字段组合上创建索引。 add index(col1 col2)
+	\item 在组合索引的使用，需要遵循最左前缀原则。
+\end{itemize}
+
+\subsection{全文索引}
+
+只有在MyISAM引擎、InnoDB（5.6以后）上才能使用，而且只能在CHAR,VARCHAR,TEXT类型字段上
+使用全文索引。 fulltext
+
+优先级最高 先执行行 不不会执行行其他索引
+
+存储引擎 决定执行行一个索引
+
+\section{索引原理}
+\subsection{B树和B+树的区别}
+\begin{itemize}
+	\item B树是非叶子节点和叶子节点都会存储数据
+	\item B+树只有叶子节点存储数据，而且存储的数据都在一行上，这些数据都有指针的，而且有顺序的。
+\end{itemize}
+\subsection{为什么是B+树}
+比如数据库索引采用B+ tree的主要原因是B Tree在提高了磁盘IO性能的同时并没有解决元素遍历的效率低下的问题。正是为了解决这个问题，B+ tree应运而生。B+ tree只要遍历叶子节点就可以实现整棵树的遍历。而且在数据库中基于范围的查询是非常频繁的，如果使用B Tree，则需要做局部的中序遍历，可能要跨层访问，效率太慢。
+
+B+树查询时间复杂度固定是logn，B树查询复杂度最好是 O(1)
+
+(1)B树的树内存储数据，因此查询单条数据的时候，B树的查询效率不固定，最好的情况是O(1)。我们可以认为在做单一数据查询的时候，使用B树平均性能更好。但是，由于B树中各节点之间没有指针相邻，因此B树不适合做一些数据遍历操作。
+
+(2)B+树的数据只出现在叶子节点上，因此在查询单条数据的时候，查询速度非常稳定。因此，在做单一数据的查询上，其平均性能并不如B树。但是，B+树的叶子节点上有指针进行相连，因此在做数据遍历的时候，只需要对叶子节点进行遍历即可，这个特性使得B+树非常适合做范围查询
+
+题主应该知道B-树和B+树最重要的一个区别就是B+树只有叶节点存放数据，其余节点用来索引，而B-树是每个索引节点都会有Data域。这就决定了B+树更适合用来存储外部数据，也就是所谓的磁盘数据。从Mysql（Inoodb）的角度来看，B+树是用来充当索引的，一般来说索引非常大，尤其是关系性数据库这种数据量大的索引能达到亿级别，所以为了减少内存的占用，索引也会被存储在磁盘上。那么Mysql如何衡量查询效率呢？磁盘IO次数，B-树（B类树）的特定就是每层节点数目非常多，层数很少，目的就是为了就少磁盘IO次数，当查询数据的时候，最好的情况就是很快找到目标索引，然后读取数据，使用B+树就能很好的完成这个目的，但是B-树的每个节点都有data域（指针），这无疑增大了节点大小，说白了增加了磁盘IO次数（磁盘IO一次读出的数据量大小是固定的，单个数据变大，每次读出的就少，IO次数增多，一次IO多耗时啊！），而B+树除了叶子节点其它节点并不存储数据，节点小，磁盘IO次数就少。这是优点之一。另一个优点是什么，B+树所有的Data域在叶子节点，一般来说都会进行一个优化，就是将所有的叶子节点用指针串起来。这样遍历叶子节点就能获得全部数据，这样就能进行区间访问啦
+\subsection{为什么Mongodb索引用B树，而Mysql用B+树?}
+
+Mysql中数据遍历操作比较多，所以用B+树作为索引结构。而Mongodb是做单一查询比较多，数据遍历操作比较少，所以用B树作为索引结构。
+
+\section{非聚集索引}
+MyISAM
+
+\begin{itemize}
+	\item B+树叶子节点只会存储数据行（）数据文件）的指针，简单来说就是数据和索引不在一起。
+	\item 非聚集索引包含主键索引和辅助索引都存储指针的值。
+	\item 叶子节点保存数据存储地址
+\end{itemize}
+\begin{figure}[htbp] 
+	\centering 
+	\includegraphics[width=0.55\textwidth]{Img//f1.jpg}
+	\caption{主键索引}
+\end{figure}
+
+\section{聚集索引}
+InnoDB
+
+\begin{itemize}
+	\item  主键索引(聚集索引)的叶子节点会存储数据行，也就是数据和索引是在一起的。
+	\item   辅助索引只会存储主键值。
+	\item  如果没有主键，则使用唯一索引建立聚集索引，如果没有唯一索引，mysql按照一定规则创建聚集索引。
+	
+	如果我们定义了主键(PRIMARY KEY)，那么InnoDB会选择主键作为聚集索引。
+	
+	如果没有显式定义主键，则InnoDB会选择第一个不包含有NULL值的唯一索引作为主键索引。
+	
+	如果也没有这样的唯一索引，则InnoDB会选择内置6字节长的ROWID作为隐含的聚集索引(ROWID随着行记录的写入而主键递增，这个ROWID不像ORACLE的ROWID那样可引用，是隐含的)。
+	
+\end{itemize}
+
+\subsection{主键索引}
+InnoDB 要求表必须有主键(MyISAM 可以没有),如果没有显式指定,则 MySQL系统会自动选择一个可以
+唯一标识数据记录的列列作为主键,如果不不存在这种列列,则MySQL 自动为 InnoDB 表生成一个隐含字段作为
+主键,类型为长整形
+\begin{figure}[htbp] 
+	\centering 
+	\includegraphics[width=0.55\textwidth]{Img//2.jpg}
+	\caption{主键索引}
+\end{figure}
+
+
+\subsection{辅助索引}
+
+第二个与 MyISAM 索引的不不同是 InnoDB 的辅助索引 data 域存储相应记录主键的值而不不是地址。换
+句句话说,InnoDB 的所有辅助索引都引用主键作为 data 域
+
+\begin{figure}[htbp] 
+	\centering 
+	\includegraphics[width=0.55\textwidth]{Img//3.jpg}
+	\caption{主键索引}
+\end{figure}
+
+聚集索引这种实现方式使得按主键的搜索十分高效,但是辅助索引搜索需要检索两遍索引:首先检索辅助
+索引获得主键,然后用主键到主索引中检索获得记录。
+
+\textbf{回表查询}检索两次 非主键索引 --- 主键---索引---数据
+
+select * from user where name='Alice'
+
+\textbf{覆盖索引(多用组合索引)}
+
+不需要回表 在辅助索引树上就可以查询到了，叶子节点上数据多
+
+select id,name from user where name='Alice' 
+
+
+
+
+
+
+
+
+
+
+\end{document}
